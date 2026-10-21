@@ -1,0 +1,760 @@
+<!doctype html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <title>Calmaria — sons para dormir</title>
+    <style>
+         :root {
+            --bg: #eef0fa;
+            --panel: #ffffffb8;
+            --line: #1a214d26;
+            --text: #171d45;
+            --muted: #555e8c;
+            --accent: #3f5bd6;
+            --moon: #b98a1d;
+            --track: #1a214d26;
+            --glow: #7f9cff40;
+            color-scheme: light;
+            box-sizing: border-box;
+            padding-top: env(safe-area-inset-top, 0px);
+            padding-bottom: env(safe-area-inset-bottom, 0px);
+        }
+        
+        @media (prefers-color-scheme: dark) {
+             :root:not([data-theme="light"]) {
+                --bg: #0c1030;
+                --panel: #ffffff0d;
+                --line: #ffffff24;
+                --text: #eef0ff;
+                --muted: #a4acd6;
+                --accent: #8fa8ff;
+                --moon: #f3d98b;
+                --track: #ffffff26;
+                --glow: #8fa8ff33;
+                color-scheme: dark;
+            }
+        }
+        
+         :root[data-theme="dark"] {
+            --bg: #0c1030;
+            --panel: #ffffff0d;
+            --line: #ffffff24;
+            --text: #eef0ff;
+            --muted: #a4acd6;
+            --accent: #8fa8ff;
+            --moon: #f3d98b;
+            --track: #ffffff26;
+            --glow: #8fa8ff33;
+            color-scheme: dark;
+        }
+        
+        * {
+            box-sizing: border-box;
+        }
+        
+        html {
+            scroll-behavior: smooth;
+            scroll-padding-top: env(safe-area-inset-top, 0px);
+        }
+        
+        body {
+            margin: 0;
+            background: radial-gradient(700px 420px at 88% -5%, var(--glow), transparent 70%), var(--bg);
+            color: var(--text);
+            font: 16px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+            min-height: 100vh;
+        }
+        
+        .wrap {
+            max-width: 860px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        .hero {
+            padding: 64px 0 36px;
+        }
+        
+        .moon {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: var(--moon);
+            box-shadow: 0 0 60px 8px var(--glow);
+            margin-bottom: 28px;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .moon::after {
+            content: "";
+            position: absolute;
+            inset: -6px -6px -6px 18px;
+            border-radius: 50%;
+            background: var(--bg);
+        }
+        
+        h1 {
+            font: 600 clamp(2.1rem, 6.5vw, 3.5rem)/1.08 Georgia, "Iowan Old Style", "Palatino Linotype", serif;
+            letter-spacing: -0.01em;
+            margin: 0 0 16px;
+            max-width: 15ch;
+        }
+        
+        .lead {
+            color: var(--muted);
+            font-size: 1.1rem;
+            max-width: 46ch;
+            margin: 0 0 26px;
+        }
+        
+        button {
+            font: inherit;
+            color: inherit;
+            cursor: pointer;
+        }
+        
+        .btn {
+            background: var(--accent);
+            color: #fff;
+            border: 0;
+            border-radius: 99px;
+            padding: 13px 26px;
+            font-weight: 600;
+        }
+        
+         :root[data-theme="dark"] .btn {
+            color: #0c1030;
+        }
+        
+        @media (prefers-color-scheme: dark) {
+             :root:not([data-theme="light"]) .btn {
+                color: #0c1030;
+            }
+        }
+        
+        .btn:hover {
+            filter: brightness(1.08);
+        }
+        
+        button:focus-visible,
+        input:focus-visible {
+            outline: 3px solid var(--accent);
+            outline-offset: 3px;
+        }
+        
+        .mixer {
+            background: var(--panel);
+            border: 1px solid var(--line);
+            border-radius: 22px;
+            padding: 8px 22px 22px;
+            margin-bottom: 56px;
+        }
+        
+        .top {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            padding: 16px 0;
+            border-bottom: 1px solid var(--line);
+            align-items: center;
+        }
+        
+        .top span {
+            color: var(--muted);
+            margin-right: 4px;
+        }
+        
+        .chip {
+            background: none;
+            border: 1px solid var(--line);
+            border-radius: 99px;
+            padding: 6px 14px;
+            font-size: 0.92rem;
+        }
+        
+        .chip:hover,
+        .chip.on {
+            border-color: var(--accent);
+            color: var(--accent);
+        }
+        
+        .row {
+            display: grid;
+            grid-template-columns: 38px 7.5rem 1fr 3rem;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 0;
+            border-bottom: 1px solid var(--line);
+            opacity: 0.62;
+            transition: opacity 0.25s;
+        }
+        
+        .row.on {
+            opacity: 1;
+        }
+        
+        .row .ic {
+            font-size: 1.6rem;
+            text-align: center;
+        }
+        
+        .row label {
+            font-weight: 600;
+        }
+        
+        .row output {
+            text-align: right;
+            color: var(--muted);
+            font-variant-numeric: tabular-nums;
+        }
+        
+        input[type="range"] {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 100%;
+            height: 8px;
+            border-radius: 99px;
+            background: linear-gradient( 90deg, var(--accent) var(--p, 0%), var(--track) var(--p, 0%));
+            margin: 0;
+            cursor: pointer;
+        }
+        
+        input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid var(--accent);
+        }
+        
+        input[type="range"]::-moz-range-thumb {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #fff;
+            border: 4px solid var(--accent);
+        }
+        
+        .bar {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 18px 28px;
+            align-items: center;
+            padding-top: 20px;
+        }
+        
+        .bar .grp {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1 1 220px;
+        }
+        
+        .bar .grp.t {
+            flex: 2 1 320px;
+            flex-wrap: wrap;
+        }
+        
+        .sm {
+            color: var(--muted);
+            font-size: 0.92rem;
+        }
+        
+        .how {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 28px;
+            margin-bottom: 48px;
+        }
+        
+        .how div {
+            border-top: 2px solid var(--moon);
+            padding-top: 12px;
+        }
+        
+        .how h3 {
+            font: 600 1.15rem Georgia, serif;
+            margin: 0 0 6px;
+        }
+        
+        .how p {
+            margin: 0;
+            color: var(--muted);
+        }
+        
+        footer {
+            color: var(--muted);
+            font-size: 0.9rem;
+            padding-bottom: 40px;
+        }
+        
+        @media (max-width: 560px) {
+            .row {
+                grid-template-columns: 34px 1fr 3rem;
+            }
+            .row input {
+                grid-column: 1/-1;
+            }
+            .row label {
+                grid-column: 2;
+            }
+            .row output {
+                grid-column: 3;
+                grid-row: 1;
+            }
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            html {
+                scroll-behavior: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <header class="hero">
+            <div class="moon" aria-hidden="true"></div>
+            <h1>Monte o silêncio do seu jeito.</h1>
+            <p class="lead">
+                Misture chuva, vento, ondas e pássaros, e ajuste cada som até o barulho ficar bom para dormir. Tudo é gerado no seu aparelho, sem baixar nada.
+            </p>
+            <button class="btn" id="go">Começar a relaxar</button>
+        </header>
+
+        <section class="mixer" id="mixer" aria-label="Mixer de sons">
+            <div class="top">
+                <span>Ambientes:</span>
+                <button class="chip" data-p="chuva">Chuva suave</button>
+                <button class="chip" data-p="tempestade">Tempestade</button>
+                <button class="chip" data-p="floresta">Floresta</button>
+                <button class="chip" data-p="praia">Praia</button>
+                <button class="chip" data-p="acampamento">Acampamento</button>
+                <button class="chip" id="rnd">Surpreenda-me</button>
+            </div>
+            <div id="rows"></div>
+            <div class="bar">
+                <div class="grp">
+                    <button class="btn" id="pp" style="min-width: 128px">Tocar</button
+            ><button class="chip" id="zero">Zerar tudo</button>
+                </div>
+                <div class="grp">
+                    <span class="sm">Geral</span
+            ><input
+              type="range"
+              id="mv"
+              min="0"
+              max="100"
+              value="80"
+              aria-label="Volume geral"
+            />
+          </div>
+          <div class="grp t">
+            <span class="sm">Desligar em:</span>
+                    <button class="chip tm on" data-m="0">Nunca</button
+            ><button class="chip tm" data-m="15">15 min</button
+            ><button class="chip tm" data-m="30">30 min</button
+            ><button class="chip tm" data-m="60">1 h</button
+            ><button class="chip tm" data-m="90">1h30</button>
+                    <span class="sm" id="tl" aria-live="polite"></span>
+                </div>
+            </div>
+        </section>
+
+        <section class="how" aria-label="Como funciona">
+            <div>
+                <h3>Sons que você controla</h3>
+                <p>
+                    Cada som tem o seu próprio volume. Deixe a chuva alta e os pássaros quase inaudíveis, ou o contrário.
+                </p>
+            </div>
+            <div>
+                <h3>Timer com saída suave</h3>
+                <p>
+                    Escolha quanto tempo quer ouvir. Nos últimos segundos o volume diminui devagar, sem susto.
+                </p>
+            </div>
+            <div>
+                <h3>Funciona sem internet</h3>
+                <p>
+                    Os sons são criados pelo navegador em tempo real. Depois de abrir a página, não precisa de conexão.
+                </p>
+            </div>
+        </section>
+        <footer>
+            Dica: comece com volume baixo e deixe o celular carregando. Se o som parar com a tela apagada, desative a economia de bateria para o navegador.
+        </footer>
+    </div>
+
+    <script>
+        const $ = (s) => document.querySelector(s);
+        const SOUNDS = [
+            ["chuva", "Chuva", "🌧️"],
+            ["trovao", "Trovões", "⛈️"],
+            ["vento", "Vento", "🌬️"],
+            ["mar", "Ondas", "🌊"],
+            ["passaros", "Pássaros", "🐦"],
+            ["grilos", "Grilos", "🦗"],
+            ["fogo", "Fogueira", "🔥"],
+            ["marrom", "Ruído marrom", "🌑"],
+        ];
+        const PRESETS = {
+            chuva: {
+                chuva: 60,
+                vento: 12
+            },
+            tempestade: {
+                chuva: 70,
+                trovao: 45,
+                vento: 35
+            },
+            floresta: {
+                passaros: 45,
+                vento: 22,
+                grilos: 18
+            },
+            praia: {
+                mar: 70,
+                vento: 25,
+                passaros: 14
+            },
+            acampamento: {
+                fogo: 55,
+                grilos: 35,
+                vento: 15
+            },
+        };
+        const vol = {},
+            chan = {},
+            built = {},
+            bufs = {};
+        SOUNDS.forEach((s) => (vol[s[0]] = 0));
+        let ctx,
+            master,
+            mv = 0.8,
+            playing = false;
+
+        function init() {
+            if (ctx) return;
+            ctx = new(window.AudioContext || window.webkitAudioContext)();
+            master = ctx.createGain();
+            master.gain.value = mv;
+            const comp = ctx.createDynamicsCompressor();
+            master.connect(comp);
+            comp.connect(ctx.destination);
+            const n = ctx.sampleRate * 5,
+                mk = (f) => {
+                    const b = ctx.createBuffer(1, n, ctx.sampleRate);
+                    f(b.getChannelData(0));
+                    return b;
+                };
+            bufs.white = mk((d) => {
+                for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
+            });
+            bufs.pink = mk((d) => {
+                let a = 0,
+                    b = 0,
+                    c = 0,
+                    e = 0,
+                    f = 0,
+                    g = 0,
+                    h = 0;
+                for (let i = 0; i < n; i++) {
+                    const x = Math.random() * 2 - 1;
+                    a = 0.99886 * a + x * 0.0555179;
+                    b = 0.99332 * b + x * 0.0750759;
+                    c = 0.969 * c + x * 0.153852;
+                    e = 0.8665 * e + x * 0.3104856;
+                    f = 0.55 * f + x * 0.5329522;
+                    g = -0.7616 * g - x * 0.016898;
+                    d[i] = (a + b + c + e + f + g + h + x * 0.5362) * 0.11;
+                    h = x * 0.115926;
+                }
+            });
+            bufs.brown = mk((d) => {
+                let l = 0;
+                for (let i = 0; i < n; i++) {
+                    l = (l + 0.02 * (Math.random() * 2 - 1)) / 1.02;
+                    d[i] = l * 3.5;
+                }
+            });
+        }
+        const noise = (t) => {
+            const s = ctx.createBufferSource();
+            s.buffer = bufs[t];
+            s.loop = true;
+            s.start(0, Math.random() * 4);
+            return s;
+        };
+        const filt = (t, f, q = 1) => {
+            const x = ctx.createBiquadFilter();
+            x.type = t;
+            x.frequency.value = f;
+            x.Q.value = q;
+            return x;
+        };
+        const gain = (v) => {
+            const g = ctx.createGain();
+            g.gain.value = v;
+            return g;
+        };
+        const lfo = (p, hz, d) => {
+            const o = ctx.createOscillator(),
+                g = gain(d);
+            o.frequency.value = hz;
+            o.connect(g);
+            g.connect(p);
+            o.start();
+        };
+        const chain = (...n) => n.reduce((a, b) => (a.connect(b), b));
+        const env = (o, t, a, d, pk) => {
+            const g = ctx.createGain();
+            g.gain.setValueAtTime(0, t);
+            g.gain.linearRampToValueAtTime(pk, t + a);
+            g.gain.exponentialRampToValueAtTime(0.0001, t + a + d);
+            g.connect(o);
+            return g;
+        };
+        const loop = (id, a, b, fn) => {
+            (function t() {
+                if (playing && vol[id] > 0) fn(chan[id]);
+                setTimeout(t, (a + Math.random() * (b - a)) * 1e3);
+            })();
+        };
+
+        const B = {
+            chuva: (o) =>
+                chain(
+                    noise("pink"),
+                    filt("highpass", 400),
+                    filt("lowpass", 9000),
+                    gain(2),
+                    o,
+                ),
+            vento: (o) => {
+                const bp = filt("bandpass", 450, 0.7),
+                    g = gain(3);
+                chain(noise("brown"), bp, g, o);
+                lfo(bp.frequency, 0.06, 250);
+                lfo(g.gain, 0.1, 1.6);
+            },
+            mar: (o) => {
+                const g = gain(2.4);
+                chain(noise("pink"), filt("lowpass", 900), g, o);
+                lfo(g.gain, 0.085, 2);
+            },
+            marrom: (o) => chain(noise("brown"), gain(0.7), o),
+            trovao: (o) =>
+                loop("trovao", 7, 22, (out) => {
+                    const t = ctx.currentTime,
+                        s = noise("brown");
+                    chain(
+                        s,
+                        filt("lowpass", 140 + Math.random() * 160),
+                        env(out, t, 0.4 + Math.random() * 0.6, 3 + Math.random() * 3, 3),
+                    );
+                    s.stop(t + 9);
+                }),
+            passaros: (o) =>
+                loop("passaros", 1.2, 5, (out) => {
+                    const t0 = ctx.currentTime,
+                        base = 2200 + Math.random() * 2800,
+                        n = 2 + ((Math.random() * 5) | 0);
+                    for (let i = 0; i < n; i++) {
+                        const t = t0 + i * (0.1 + Math.random() * 0.08),
+                            d = 0.05 + Math.random() * 0.09,
+                            os = ctx.createOscillator();
+                        os.frequency.setValueAtTime(
+                            base * (0.9 + Math.random() * 0.3),
+                            t,
+                        );
+                        os.frequency.exponentialRampToValueAtTime(
+                            base * (0.7 + Math.random() * 0.7),
+                            t + d,
+                        );
+                        os.connect(env(out, t, 0.01, d, 0.18));
+                        os.start(t);
+                        os.stop(t + d + 0.05);
+                    }
+                }),
+            grilos: (o) =>
+                loop("grilos", 0.5, 1.6, (out) => {
+                    const t0 = ctx.currentTime,
+                        f = 3900 + Math.random() * 900;
+                    for (let i = 0; i < 3; i++) {
+                        const t = t0 + i * 0.07,
+                            os = ctx.createOscillator();
+                        os.frequency.value = f;
+                        os.connect(env(out, t, 0.012, 0.04, 0.1));
+                        os.start(t);
+                        os.stop(t + 0.08);
+                    }
+                }),
+            fogo: (o) => {
+                chain(noise("brown"), filt("lowpass", 500), gain(2), o);
+                loop("fogo", 0.05, 0.35, (out) => {
+                    const t = ctx.currentTime,
+                        s = ctx.createBufferSource();
+                    s.buffer = bufs.white;
+                    s.connect(filt("highpass", 1200 + Math.random() * 2500)).connect(
+                        env(
+                            out,
+                            t,
+                            0.002,
+                            0.02 + Math.random() * 0.03,
+                            0.3 + Math.random() * 0.5,
+                        ),
+                    );
+                    s.start(t, Math.random() * 4, 0.08);
+                });
+            },
+        };
+
+        function setVol(id, v) {
+            vol[id] = v;
+            if (v > 0) {
+                init();
+                if (!built[id]) {
+                    const g = (chan[id] = gain(0));
+                    g.connect(master);
+                    B[id](g);
+                    built[id] = 1;
+                }
+            }
+            if (chan[id])
+                chan[id].gain.setTargetAtTime(
+                    Math.pow(v / 100, 1.6),
+                    ctx.currentTime,
+                    0.08,
+                );
+        }
+
+        function paint(id, v) {
+            const r = $("#r-" + id);
+            r.value = v;
+            r.style.setProperty("--p", v + "%");
+            $("#o-" + id).textContent = v + "%";
+            $("#w-" + id).classList.toggle("on", v > 0);
+        }
+
+        function set(id, v) {
+            paint(id, v);
+            setVol(id, v);
+            if (v > 0 && !playing) play();
+        }
+
+        function play() {
+            init();
+            ctx.resume();
+            playing = true;
+            $("#pp").textContent = "Pausar";
+        }
+
+        function pause() {
+            if (ctx) ctx.suspend();
+            playing = false;
+            $("#pp").textContent = "Tocar";
+        }
+
+        function preset(p) {
+            SOUNDS.forEach((s) => set(s[0], p[s[0]] || 0));
+        }
+
+        function mixTotal() {
+            return SOUNDS.reduce((a, s) => a + vol[s[0]], 0);
+        }
+
+        $("#rows").innerHTML = SOUNDS.map(
+            (s) =>
+            `<div class="row" id="w-${s[0]}"><span class="ic" aria-hidden="true">${s[2]}</span><label for="r-${s[0]}">${s[1]}</label><input type="range" id="r-${s[0]}" min="0" max="100" value="0"><output id="o-${s[0]}">0%</output></div>`,
+        ).join("");
+        SOUNDS.forEach((s) =>
+            $("#r-" + s[0]).addEventListener("input", (e) =>
+                set(s[0], +e.target.value),
+            ),
+        );
+        document.querySelectorAll("[data-p]").forEach(
+            (b) =>
+            (b.onclick = () => {
+                preset(PRESETS[b.dataset.p]);
+                document
+                    .querySelectorAll("[data-p]")
+                    .forEach((x) => x.classList.toggle("on", x === b));
+            }),
+        );
+        $("#rnd").onclick = () => {
+            const ids = SOUNDS.map((s) => s[0]).sort(() => Math.random() - 0.5),
+                k = 3 + ((Math.random() * 2) | 0);
+            ids.forEach((id, i) =>
+                set(id, i < k ? 20 + ((Math.random() * 70) | 0) : 0),
+            );
+        };
+        $("#zero").onclick = () => preset({});
+        $("#pp").onclick = () => {
+            if (playing) pause();
+            else {
+                if (!mixTotal()) preset(PRESETS.chuva);
+                play();
+            }
+        };
+        $("#go").onclick = () => {
+            if (!mixTotal()) preset(PRESETS.chuva);
+            play();
+            $("#mixer").scrollIntoView({
+                behavior: "smooth"
+            });
+        };
+        $("#mv").addEventListener("input", (e) => {
+            mv = e.target.value / 100;
+            e.target.style.setProperty("--p", e.target.value + "%");
+            if (master) master.gain.setTargetAtTime(mv, ctx.currentTime, 0.05);
+        });
+        $("#mv").style.setProperty("--p", "80%");
+
+        let tEnd = 0,
+            ti;
+
+        function timer(m) {
+            clearInterval(ti);
+            document
+                .querySelectorAll(".tm")
+                .forEach((b) => b.classList.toggle("on", +b.dataset.m === m));
+            const tl = $("#tl");
+            tl.textContent = "";
+            if (master) {
+                master.gain.cancelScheduledValues(0);
+                master.gain.setTargetAtTime(mv, ctx.currentTime, 0.1);
+            }
+            if (!m) return;
+            tEnd = Date.now() + m * 6e4;
+            tl.textContent = "Desliga em " + m + " min";
+            ti = setInterval(() => {
+                const r = tEnd - Date.now();
+                if (r <= 0) {
+                    clearInterval(ti);
+                    pause();
+                    master.gain.cancelScheduledValues(0);
+                    master.gain.value = mv;
+                    tl.textContent = "Boa noite.";
+                    document
+                        .querySelectorAll(".tm")
+                        .forEach((b) => b.classList.toggle("on", b.dataset.m === "0"));
+                    return;
+                }
+                tl.textContent = "Desliga em " + Math.ceil(r / 6e4) + " min";
+                if (master && r < 2e4)
+                    master.gain.setTargetAtTime((mv * r) / 2e4, ctx.currentTime, 0.3);
+            }, 1e3);
+        }
+        document
+            .querySelectorAll(".tm")
+            .forEach((b) => (b.onclick = () => timer(+b.dataset.m)));
+    </script>
+</body>
+
+</html>
